@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">udacity-baking-app</string>
+    <string name="app_name">Udacity Baking App</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="empty_view_message">List is Empty</string>
+    <string name="general_image_description">General Image</string>
+    <string name="error_message">ERROR</string>
+    <string name="error_desc">Empty View Acquired!</string>
+    <string name="error_check">Check Internet Connection Please.</string>
 </resources>
