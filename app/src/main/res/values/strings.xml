@@ -4,7 +4,13 @@
     <string name="add_widget">Add widget</string>
     <string name="empty_view_message">List is Empty</string>
     <string name="general_image_description">General Image</string>
-    <string name="error_message">ERROR</string>
+    <string name="error_message">ERROR : empty view acquired … </string>
     <string name="error_desc">Empty View Acquired!</string>
     <string name="error_check">Check Internet Connection Please.</string>
+    <string name="thumbnail_image_content">Video Image</string>
+    <string name="rewind_button">Rewind</string>
+    <string name="forward_button">Forward</string>
+    <string name="play_button">Play</string>
+    <string name="pause_button">Pause</string>
+    <string name="toggle_button">Repeat</string>
 </resources>

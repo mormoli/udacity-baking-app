@@ -4,60 +4,27 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ListView
+    <GridView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:loopViews="true"/>
+        android:numColumns="1"
+        android:gravity="center"
+        tools:listitem="@layout/widget_row_item"/>
 
     <RelativeLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/list_image_tv"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/general_image_description"
-            android:src="@drawable/ic_chocolate_heart" />
-        <!-- https://material.io/design/components/lists.html#specs -->
-        <LinearLayout
-            android:id="@+id/recipe_header"
+        <TextView
+            android:id="@+id/error_list_text_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/list_image_tv"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
+            android:layout_margin="16dp"
+            android:textAlignment="center"
+            android:text="@string/error_message" />
 
-            <TextView
-                android:id="@+id/recipe_header_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/error_message"
-                android:textStyle="bold"
-                android:textColor="#000"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/recipe_sort_description_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/error_desc"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/servings_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/error_check"
-                android:layout_gravity="bottom" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 

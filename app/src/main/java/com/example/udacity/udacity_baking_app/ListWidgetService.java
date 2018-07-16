@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.udacity.udacity_baking_app.model.TheIngredients;
 import com.example.udacity.udacity_baking_app.model.TheRecipe;
 import com.example.udacity.udacity_baking_app.model.TheSteps;
 import com.example.udacity.udacity_baking_app.utils.TheRecipesInterface;
@@ -29,21 +30,22 @@ public class ListWidgetService extends RemoteViewsService {
     }
 
     class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-        Context context;
-        private ArrayList<TheRecipe> recipeList;
-        private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+        //Context context;
+        private ArrayList<TheIngredients> ingredientsList;
+        //private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
         private final String TAG = ListRemoteViewsFactory.class.getSimpleName();
-        private int appWidgetId;
+        //private int appWidgetId;
 
         ListRemoteViewsFactory(Context applicationContext, Intent intent) {
-            this.context = applicationContext;
-            this.appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            //this.context = applicationContext;
+            //this.appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            this.ingredientsList = intent.getParcelableArrayListExtra("ingredients");
         }
 
         @Override
         public void onCreate() {
             // In onCreate() you set up any connections / cursors to your data source. Heavy lifting
-            recipeList = new ArrayList<>();
+            //recipeList = new ArrayList<>();
         }
         //called on start and when notifyAppWidgetViewDataChanged is called
 
@@ -56,7 +58,7 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             Log.d(TAG, "onDataSetChanged method called.");
-            if(recipeList == null) recipeList = new ArrayList<>();
+            /*if(recipeList == null) recipeList = new ArrayList<>();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -75,21 +77,21 @@ public class ListWidgetService extends RemoteViewsService {
                 public void onFailure(@NonNull Call<ArrayList<TheRecipe>> call, @NonNull Throwable t) {
                     Log.d(TAG, t.toString());
                 }
-            });
+            });*/
 
         }
 
         //Called when the last RemoteViewsAdapter that is associated with this factory is unbound.
         @Override
         public void onDestroy() {
-            recipeList.clear();
+            //recipeList.clear();
         }
-
+        @SuppressWarnings("ConstantConditions")
         @Override
         public int getCount() {
-            Log.d(TAG, "getCount called : " + recipeList.size());
-            if (recipeList == null || recipeList.size() == 0) return 4;
-            return recipeList.size();
+            Log.d(TAG, "getCount called : " + ingredientsList.size());
+            if (ingredientsList == null || ingredientsList.size() < 0) return 0;
+            return ingredientsList.size();
         }
 
         /**
@@ -101,13 +103,10 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             Log.d(TAG, "getViewAt method called.");
-            if (recipeList == null || recipeList.size() == 0) {
+            /*if (recipeList == null || recipeList.size() == 0) {
                 Log.d(TAG, "recipe list is Null !!");
                 return null;
-            }
-
-
-            final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_row_item);
+            }*/
             //setting image
             /*if (recipeList.get(position).getImageURL() != null) {
                 Picasso.get()
@@ -133,7 +132,7 @@ public class ListWidgetService extends RemoteViewsService {
                         });
             }*/
             //recipe name
-            String recipeName = recipeList.get(position).getName();
+            /*String recipeName = recipeList.get(position).getName();
             views.setTextViewText(R.id.recipe_header_tv, recipeName);
             views.setViewVisibility(R.id.recipe_header_tv, View.VISIBLE);
             Log.d(TAG, recipeName);
@@ -154,8 +153,19 @@ public class ListWidgetService extends RemoteViewsService {
             Intent fillInIntent = new Intent();
             //fillInIntent.putExtras(extras);
             views.setOnClickFillInIntent(R.id.list_image_tv, fillInIntent);
-            views.setOnClickFillInIntent(R.id.recipe_header_tv, fillInIntent);
-
+            views.setOnClickFillInIntent(R.id.recipe_header_tv, fillInIntent);*/
+            RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_row_item);
+            /*StringBuilder builder = new StringBuilder();
+            for (int i=0; i < ingredientsList.size(); i++){
+                builder.append((i+1) + ". " + ingredientsList.get(i).getIngredient() + " ( " + ingredientsList.get(i).getQuantity() + " "
+                        + ingredientsList.get(i).getMeasure() + ") \n");
+            }
+            String result = builder.toString();*/
+            String row = (position+1) + ". " + ingredientsList.get(position).getIngredient() + " ( " + ingredientsList.get(position).getQuantity() + " "
+                    + ingredientsList.get(position).getMeasure();
+            views.setTextViewText(R.id.ingredients_list_text_tv, row);
+            Intent fillInIntent = new Intent();
+            views.setOnClickFillInIntent(R.id.ingredients_list_text_tv, fillInIntent);
             return views;
         }
 
