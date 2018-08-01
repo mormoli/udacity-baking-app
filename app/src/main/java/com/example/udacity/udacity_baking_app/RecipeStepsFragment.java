@@ -141,8 +141,10 @@ public class RecipeStepsFragment extends Fragment {
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(step.getVideoURL()));
-        player.prepare(mediaSource, true, false);
+        if(step.getVideoURL() != null) {
+            MediaSource mediaSource = buildMediaSource(Uri.parse(step.getVideoURL()));
+            player.prepare(mediaSource, true, false);
+        }
     }
 
     private void releasePlayer(){

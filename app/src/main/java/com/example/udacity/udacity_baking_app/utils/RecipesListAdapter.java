@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.RecipesListViewHolder>{
     private ArrayList<TheRecipe> recipes;
     private OnItemClicked onItemClicked;
+    private int selectedItem = RecyclerView.NO_POSITION;
 
     public RecipesListAdapter(ArrayList<TheRecipe> recipes){
         this.recipes = recipes;
@@ -44,6 +45,16 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
         holder.shortDescription.setText(shortDescription);
         String strServings = "Servings: " + recipes.get(position).getServings();
         holder.servings.setText(strServings);
+        //highlighting list item background on select / on click.
+        //@see "https://stackoverflow.com/questions/27194044/how-to-properly-highlight-selected-item-on-recyclerview/28838834#"
+        if (selectedItem == RecyclerView.NO_POSITION) return;
+        else { //color accent will be selected items background color
+            //color primary is previously chosen items background color
+            int selectedColor = holder.mView.getResources().getColor(R.color.colorAccent);
+            int defaultColor = holder.mView.getResources().getColor(R.color.colorPrimary);
+            holder.mView.setBackgroundColor(selectedItem == position ?
+                    selectedColor : defaultColor);
+        }
     }
 
     @Override
@@ -73,6 +84,9 @@ public class RecipesListAdapter extends RecyclerView.Adapter<RecipesListAdapter.
         public void onClick(View v) {
             if(onItemClicked != null){
                 onItemClicked.onItemClick(v, getAdapterPosition());
+                notifyItemChanged(selectedItem);
+                selectedItem = getAdapterPosition();
+                notifyItemChanged(selectedItem);
             }
         }
     }

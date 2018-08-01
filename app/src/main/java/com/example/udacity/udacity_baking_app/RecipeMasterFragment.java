@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,11 @@ import com.example.udacity.udacity_baking_app.utils.RecipeMasterAdapter;
 import java.util.ArrayList;
 
 public class RecipeMasterFragment extends Fragment {
+    private static final String TAG = RecipeMasterAdapter.class.getSimpleName();
     RecyclerView recyclerView;
     private TheRecipe recipe;
     private RecipeMasterAdapter recipeMasterAdapter;
-    private int positionState;
+    private OnRecipeStepSelected onRecipeStepSelected;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment
      */
@@ -74,7 +76,8 @@ public class RecipeMasterFragment extends Fragment {
         recipeMasterAdapter.setOnClick(new RecipeMasterAdapter.OnItemClicked() {
             @Override
             public void onItemClick(View view, int position) {
-                positionState = position;
+                Log.d(TAG, "clicked: " + position);
+                onRecipeStepSelected.OnStepSelected(position);
                 /*if(view.getTag().equals("selected")) {
                     view.setBackgroundResource(R.color.colorAccent);
                 }*/
@@ -89,4 +92,11 @@ public class RecipeMasterFragment extends Fragment {
         if (recipe != null) recipe = null;
     }
 
+    public interface OnRecipeStepSelected{
+        void OnStepSelected(int position);
+    }
+
+    public void setOnSelect(OnRecipeStepSelected onSelect){
+        onRecipeStepSelected = onSelect;
+    }
 }

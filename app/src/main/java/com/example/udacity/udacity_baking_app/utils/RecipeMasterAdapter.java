@@ -1,8 +1,7 @@
 package com.example.udacity.udacity_baking_app.utils;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +20,11 @@ public class RecipeMasterAdapter extends RecyclerView.Adapter<RecipeMasterAdapte
 
     private ArrayList<TheSteps> stepList;
     private OnItemClicked onItemClicked;
+    private int selectedItem = RecyclerView.NO_POSITION;
 
     public RecipeMasterAdapter(ArrayList<TheSteps> stepList){
         this.stepList = stepList;
+        //this.onItemClicked = (OnItemClicked) context;
     }
 
     @NonNull
@@ -38,6 +39,16 @@ public class RecipeMasterAdapter extends RecyclerView.Adapter<RecipeMasterAdapte
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String step = stepList.get(position).getId() + "\t" + stepList.get(position).getShortDescription();
         holder.textView.setText(step);
+        //highlighting list item background on select / click.
+        //@see "https://stackoverflow.com/questions/27194044/how-to-properly-highlight-selected-item-on-recyclerview/28838834#"
+        if (selectedItem == RecyclerView.NO_POSITION) return;
+        else {//color accent will be selected items background color
+            //color primary is previously chosen items background color
+            int selectedColor = holder.mView.getResources().getColor(R.color.colorAccent);
+            int defaultColor = holder.mView.getResources().getColor(R.color.colorPrimary);
+            holder.mView.setBackgroundColor(selectedItem == position ?
+                    selectedColor : defaultColor);
+        }
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -56,6 +67,9 @@ public class RecipeMasterAdapter extends RecyclerView.Adapter<RecipeMasterAdapte
         public void onClick(View v) {
             if(onItemClicked != null){
                 onItemClicked.onItemClick(v, getAdapterPosition());
+                notifyItemChanged(selectedItem);
+                selectedItem = getAdapterPosition();
+                notifyItemChanged(selectedItem);
             }
         }
     }
