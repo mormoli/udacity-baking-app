@@ -1,6 +1,7 @@
 package com.example.udacity.udacity_baking_app;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -59,6 +60,7 @@ public class RecipeMasterFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         TextView headerTv = view.findViewById(R.id.ingredients_header_tv);
         TextView ingredients = view.findViewById(R.id.ingredients_list_tv);
         //setting recipe name as header

@@ -1,6 +1,8 @@
 package com.example.udacity.udacity_baking_app;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +13,11 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.udacity.udacity_baking_app.model.TheSteps;
@@ -23,6 +29,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.dash.DashChunkSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
@@ -33,6 +40,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
@@ -56,6 +64,9 @@ public class RecipeStepsFragment extends Fragment {
     private long playbackPosition;
     private int currentWindow;
     private boolean playWhenReady = true;
+    private boolean hasVideoUrl = false;
+
+    private FrameLayout frameLayout;
 
     ImageView imageView;
     TextView textView;
@@ -79,6 +90,7 @@ public class RecipeStepsFragment extends Fragment {
         playerView = rootView.findViewById(R.id.video_view);
         imageView = rootView.findViewById(R.id.thumbnail_image_view);
         textView = rootView.findViewById(R.id.steps_description_tv);
+        frameLayout = rootView.findViewById(R.id.video_view_layout);
         return rootView;
     }
 
@@ -86,12 +98,28 @@ public class RecipeStepsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //checking video url if its null setting view visibility to hide in layout
-        if(step.getVideoURL() == null) playerView.setVisibility(View.GONE);
+        if(step.getVideoURL() == null || step.getVideoURL().isEmpty()){
+            playerView.setVisibility(View.GONE);
+        } else {
+            hasVideoUrl = true;
+        }
         if(step.getThumbnailURL() != null){  // setting thumbnail image of videos if is not null
             Uri uri = Uri.parse(step.getThumbnailURL()).buildUpon().build();
-            Picasso.get()
-                    .load(uri)
-                    .into(imageView);
+            //determine whether uri is image type or not
+            //ContentResolver contentResolver = getActivity().getContentResolver();
+            String type = null; //= contentResolver.getType(uri);
+            String ext = MimeTypeMap.getFileExtensionFromUrl(step.getThumbnailURL());
+            if(ext != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
+                Log.d(TAG, "mime type of uri: " + type);
+            }
+            if(type != null && type.startsWith("image")) {
+                Picasso.get()
+                        .load(uri)
+                        .into(imageView);
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
         } else {
             imageView.setVisibility(View.GONE);
         }
@@ -101,28 +129,43 @@ public class RecipeStepsFragment extends Fragment {
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            hideSystemUi();
+        } else {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frameLayout.getLayoutParams());
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height = 600;
+            frameLayout.setLayoutParams(params);
+            showSystemUI();
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        if(Util.SDK_INT > 23) initializePlayer();
+        //make sure video url exist to initialize video player for.
+        if(Util.SDK_INT > 23 && hasVideoUrl) initializePlayer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
-        if((Util.SDK_INT < 23 || player == null)) initializePlayer();
+        //hideSystemUi();
+        if((Util.SDK_INT < 23 || player == null) && hasVideoUrl) initializePlayer();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(Util.SDK_INT <= 23) releasePlayer();
+        if(Util.SDK_INT <= 23 && hasVideoUrl) releasePlayer();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if(Util.SDK_INT > 23) releasePlayer();
+        if(Util.SDK_INT > 23 && hasVideoUrl) releasePlayer();
     }
 
     //exoplayer initialization
@@ -141,10 +184,11 @@ public class RecipeStepsFragment extends Fragment {
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        if(step.getVideoURL() != null) {
-            MediaSource mediaSource = buildMediaSource(Uri.parse(step.getVideoURL()));
-            player.prepare(mediaSource, true, false);
-        }
+        DataSource.Factory dataSoureFactory = new DefaultDataSourceFactory(getContext(),
+                Util.getUserAgent(getContext(), getString(R.string.app_name)), BANDWIDTH_METER);
+        MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSoureFactory)
+                .createMediaSource(Uri.parse(step.getVideoURL()));//buildMediaSource(Uri.parse(step.getVideoURL()));
+        player.prepare(mediaSource, true, false);
     }
 
     private void releasePlayer(){
@@ -168,12 +212,24 @@ public class RecipeStepsFragment extends Fragment {
 
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
-        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
+        playerView.setSystemUiVisibility(
+                //View.SYSTEM_UI_FLAG_LOW_PROFILE
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+    // Shows the system bars by removing all the flags
+    // except for the ones that make the content appear under the system bars.
+    //@see "https://developer.android.com/training/system-ui/immersive"
+    private void showSystemUI(){
+        playerView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
     }
 
     private class ComponentListener extends Player.DefaultEventListener implements
