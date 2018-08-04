@@ -1,7 +1,6 @@
 package com.example.udacity.udacity_baking_app;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,10 +13,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.udacity.udacity_baking_app.model.TheSteps;
@@ -56,6 +52,8 @@ public class RecipeStepsFragment extends Fragment {
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private static final String TAG = RecipeStepsFragment.class.getSimpleName();
     private TheSteps step;
+    //private TheRecipe recipe;
+    //private int selectedIndex;
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
@@ -66,7 +64,7 @@ public class RecipeStepsFragment extends Fragment {
     private boolean playWhenReady = true;
     private boolean hasVideoUrl = false;
 
-    private FrameLayout frameLayout;
+    //private FrameLayout frameLayout;
 
     ImageView imageView;
     TextView textView;
@@ -78,6 +76,8 @@ public class RecipeStepsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             step = getArguments().getParcelable("Step");
+            //recipe = getArguments().getParcelable("Recipe");
+            //selectedIndex = getArguments().getInt("index");
         }
     }
 
@@ -90,7 +90,7 @@ public class RecipeStepsFragment extends Fragment {
         playerView = rootView.findViewById(R.id.video_view);
         imageView = rootView.findViewById(R.id.thumbnail_image_view);
         textView = rootView.findViewById(R.id.steps_description_tv);
-        frameLayout = rootView.findViewById(R.id.video_view_layout);
+        //frameLayout = rootView.findViewById(R.id.video_view_layout);
         return rootView;
     }
 
@@ -134,10 +134,10 @@ public class RecipeStepsFragment extends Fragment {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
             hideSystemUi();
         } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frameLayout.getLayoutParams());
+            /*FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frameLayout.getLayoutParams());
             params.width = ViewGroup.LayoutParams.MATCH_PARENT;
             params.height = 600;
-            frameLayout.setLayoutParams(params);
+            frameLayout.setLayoutParams(params);*/
             showSystemUI();
         }
     }
