@@ -85,6 +85,9 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_steps_layout, container, false);
+        if (savedInstanceState != null){
+            step = savedInstanceState.getParcelable("step");
+        }
         //initializing attaching variables to source
         componentListener = new ComponentListener();
         playerView = rootView.findViewById(R.id.video_view);
@@ -126,6 +129,15 @@ public class RecipeStepsFragment extends Fragment {
 
         //setting description about step in to text view
         textView.setText(step.getDescription());
+    }
+
+    public void setCurrentStep(TheSteps step){
+        this.step = step;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable("step", step);
     }
 
     @Override
