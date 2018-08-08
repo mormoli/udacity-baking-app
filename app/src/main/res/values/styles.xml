@@ -1,5 +1,5 @@
 <resources>
-
+    <!-- https://stackoverflow.com/questions/40822173/cannot-resolve-symbol-theme-in-styles-xml-android-studio -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
