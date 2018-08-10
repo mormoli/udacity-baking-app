@@ -39,6 +39,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             //Add the contents of the container with the new fragment
             fragmentTransaction.add(R.id.master_list_fragment, masterFragment);
+            //fragmentTransaction.addToBackStack(null);
             //Complete in other word commit changes added above
             fragmentTransaction.commit();
         }
@@ -63,6 +64,12 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == android.R.id.home){
+            getSupportFragmentManager().popBackStack();
+            if(!mTwoPane) {//if its not tablet layout
+            //check whether there is tab layout and set visibility gone (Invisible)
+                if(tabLayout.getVisibility() == View.VISIBLE)
+                    tabLayout.setVisibility(View.GONE);
+            }
             onBackPressed();
             return true;
         }
@@ -86,10 +93,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
      * method that overrides fragments on step selected method*/
     @Override
     public void OnStepSelected(int position) {
-        //step list detail depending on step position
-        //open or replace fragment with detail fragment
-        //video url return null condition check !!!
-        // in order to not throw exception !
+
         if (!mTwoPane) { //its not tablet layout initialize steps detail fragment
             Bundle bundle = new Bundle();
             TheSteps step = recipe.getTheSteps().get(position);
@@ -104,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             // Replace whatever is in the fragment_container view with this fragment,
             // and add the transaction to the back stack so the user can navigate back
             fragmentTransaction.replace(R.id.master_list_fragment, stepsFragment);
-            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.addToBackStack(stepsFragment.getClass().getSimpleName());
             // Commit the transaction
             fragmentTransaction.commit();
             //handleConfigurationChanges(position, new Configuration());
@@ -134,7 +138,14 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
         //tabLayout.setupWithViewPager(viewPager);
         for(int i = 0; i < recipe.getTheSteps().size(); i++){
             String tabText = "Step " + i;
-            tabLayout.addTab(tabLayout.newTab().setText(tabText));
+            //creating tabs with below line code creates empty first slot then populates all
+            //tabLayout.addTab(tabLayout.newTab().setText(tabText));
+            //Create a new tab
+            TabLayout.Tab tab = tabLayout.newTab();
+            //set text to show on the tab
+            tab.setText(tabText);
+            //add tab to specific position in the tablayout
+            tabLayout.addTab(tab, i);
         }
         tabLayout.getTabAt(index).select();
         //TabLayout.Tab tab = tabLayout.getTabAt(position);
@@ -163,11 +174,13 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
                     //selected tab step
                     TheSteps step = recipe.getTheSteps().get(index);
                     //bundle.putParcelable("Step", step);
-                    //creating new fragment
+                    //creating / replacing new fragment
                     RecipeStepsFragment stepsFragment = new RecipeStepsFragment();
                     stepsFragment.setCurrentStep(step);//setting new selected step
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.master_list_fragment, stepsFragment)
+                            //.addToBackStack(null)
+                            //.disallowAddToBackStack()
                             .commit();
                     //lastSelected = index;
                 //}
@@ -196,7 +209,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
 
     /*private void handleConfigurationChanges(int position, Configuration newConfig){
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            Log.d(TAG, "portrain mode called.");
+            Log.d(TAG, "portrait mode called.");
             populateTabs(position);
         }
     }*/
