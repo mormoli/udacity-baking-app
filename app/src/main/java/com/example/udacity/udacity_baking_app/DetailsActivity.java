@@ -144,7 +144,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             TabLayout.Tab tab = tabLayout.newTab();
             //set text to show on the tab
             tab.setText(tabText);
-            //add tab to specific position in the tablayout
+            //add tab to specific position in the tab layout
             tabLayout.addTab(tab, i);
         }
         tabLayout.getTabAt(index).select();

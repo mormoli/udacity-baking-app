@@ -3,6 +3,9 @@ package com.example.udacity.udacity_baking_app;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.example.udacity.udacity_baking_app.idlingResource.SimpleIdlingResource;
 import com.example.udacity.udacity_baking_app.model.TheIngredients;
 import com.example.udacity.udacity_baking_app.model.TheRecipe;
 import com.example.udacity.udacity_baking_app.utils.RecipesListAdapter;
@@ -35,6 +39,10 @@ public class MainActivity extends AppCompatActivity{
     private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
     private static final String TAG = MainActivity.class.getSimpleName();
     private Parcelable recyclerViewState;
+
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +88,17 @@ public class MainActivity extends AppCompatActivity{
         fragmentManager.beginTransaction()
                 .add(R.id.list_view_fragment, listViewFragment)
                 .commit();*/
+    }
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource(){
+        if (mIdlingResource == null){
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 
     /**
