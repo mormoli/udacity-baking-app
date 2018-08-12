@@ -1,4 +1,4 @@
-# udacity-baking-app
+# Udacity Baking App
 This project is the third task of the Udacity Google Android Developer Nanodegree Scholarship.
 
 ## Used Libraries
