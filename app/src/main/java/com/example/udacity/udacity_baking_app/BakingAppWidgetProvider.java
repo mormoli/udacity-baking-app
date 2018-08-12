@@ -63,6 +63,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         Intent appIntent = new Intent(context, MainActivity.class);
         PendingIntent appPendingIntent = PendingIntent.getActivity(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.list_view, appPendingIntent);
+        //views.setOnClickPendingIntent(R.layout.widget_list_view, appPendingIntent);
         //Handle empty view
         views.setEmptyView(R.id.list_view, R.id.empty_view);
 

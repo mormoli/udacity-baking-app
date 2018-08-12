@@ -14,6 +14,14 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+/**
+ * This test demos a user clicking on a Recycler View item in MainActivity which opens up the
+ * corresponding DetailsActivity.
+ *
+ * This test does not utilize Idling Resources yet. If idling is set in the MainActivity,
+ * then this test will fail. See the IdlingResourcesTest for an identical test that
+ * takes into account Idling Resources.
+ */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityScreenTest {
     private static final String RECIPE_NAME = "Nutella Pie";
