@@ -58,27 +58,6 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             Log.d(TAG, "onDataSetChanged method called.");
-            /*if(recipeList == null) recipeList = new ArrayList<>();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            TheRecipesInterface theRecipesInterface = retrofit.create(TheRecipesInterface.class);
-            Call<ArrayList<TheRecipe>> call = theRecipesInterface.getRecipes();
-            call.enqueue(new Callback<ArrayList<TheRecipe>>() {
-                @Override
-                public void onResponse(@NonNull Call<ArrayList<TheRecipe>> call, @NonNull Response<ArrayList<TheRecipe>> response) {
-                    recipeList.addAll(response.body());
-                    Log.d(TAG, "Recipe list size: " + recipeList.size());
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ArrayList<TheRecipe>> call, @NonNull Throwable t) {
-                    Log.d(TAG, t.toString());
-                }
-            });*/
-
         }
 
         //Called when the last RemoteViewsAdapter that is associated with this factory is unbound.
@@ -103,64 +82,8 @@ public class ListWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             Log.d(TAG, "getViewAt method called.");
-            /*if (recipeList == null || recipeList.size() == 0) {
-                Log.d(TAG, "recipe list is Null !!");
-                return null;
-            }*/
-            //setting image
-            /*if (recipeList.get(position).getImageURL() != null) {
-                Picasso.get()
-                        .load(recipeList.get(position).getImageURL())
-                        .placeholder(R.drawable.ic_chocolate_heart)
-                        .into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                views.setImageViewBitmap(R.id.list_image_tv, bitmap);
-                            }
 
-                            @Override
-                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                                //do something when loading failed
-                                Log.d(TAG, "Bitmap loading failed!");
-                            }
-
-
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                //do something while loading
-                            }
-                        });
-            }*/
-            //recipe name
-            /*String recipeName = recipeList.get(position).getName();
-            views.setTextViewText(R.id.recipe_header_tv, recipeName);
-            views.setViewVisibility(R.id.recipe_header_tv, View.VISIBLE);
-            Log.d(TAG, recipeName);
-            //short description
-            ArrayList<TheSteps> theSteps = recipeList.get(position).getTheSteps();
-            String shortDescription = theSteps.get(0).getShortDescription();
-            views.setTextViewText(R.id.recipe_sort_description_tv, shortDescription);
-            views.setViewVisibility(R.id.recipe_sort_description_tv, View.VISIBLE);
-            Log.d(TAG, shortDescription);
-            //servings
-            String servings = "Servings: " + recipeList.get(position).getServings();
-            views.setTextViewText(R.id.servings_tv, servings);
-            views.setViewVisibility(R.id.servings_tv, View.VISIBLE);
-            Log.d(TAG, servings);
-            // Fill in the onClick PendingIntent Template using the specific Id for each item individually
-            //Bundle extras = new Bundle();
-            //extras.putInt(BakingAppWidgetProvider.EXTRA_ID, position);
-            Intent fillInIntent = new Intent();
-            //fillInIntent.putExtras(extras);
-            views.setOnClickFillInIntent(R.id.list_image_tv, fillInIntent);
-            views.setOnClickFillInIntent(R.id.recipe_header_tv, fillInIntent);*/
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_row_item);
-            /*StringBuilder builder = new StringBuilder();
-            for (int i=0; i < ingredientsList.size(); i++){
-                builder.append((i+1) + ". " + ingredientsList.get(i).getIngredient() + " ( " + ingredientsList.get(i).getQuantity() + " "
-                        + ingredientsList.get(i).getMeasure() + ") \n");
-            }
-            String result = builder.toString();*/
             String row = (position+1) + ". " + ingredientsList.get(position).getIngredient() + " ( " + ingredientsList.get(position).getQuantity() + " "
                     + ingredientsList.get(position).getMeasure();
             views.setTextViewText(R.id.ingredients_list_text_tv, row);

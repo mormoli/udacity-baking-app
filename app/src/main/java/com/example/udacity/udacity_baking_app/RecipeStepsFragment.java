@@ -1,7 +1,6 @@
 package com.example.udacity.udacity_baking_app;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,8 +48,6 @@ public class RecipeStepsFragment extends Fragment {
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private static final String TAG = RecipeStepsFragment.class.getSimpleName();
     private TheSteps step;
-    //private TheRecipe recipe;
-    //private int selectedIndex;
 
     private SimpleExoPlayer player;
     private PlayerView playerView;
@@ -62,7 +59,6 @@ public class RecipeStepsFragment extends Fragment {
     private boolean hasVideoUrl = false;
 
     private boolean mTwoPane;
-    //private FrameLayout frameLayout;
 
     ImageView imageView;
     TextView textView;
@@ -74,8 +70,6 @@ public class RecipeStepsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             step = getArguments().getParcelable("Step");
-            //recipe = getArguments().getParcelable("Recipe");
-            //selectedIndex = getArguments().getInt("index");
         }
     }
 
@@ -92,7 +86,6 @@ public class RecipeStepsFragment extends Fragment {
         imageView = rootView.findViewById(R.id.thumbnail_image_view);
         textView = rootView.findViewById(R.id.steps_description_tv);
         mTwoPane = rootView.findViewById(R.id.step_details_fragment) != null;
-        //frameLayout = rootView.findViewById(R.id.video_view_layout);
         return rootView;
     }
 
@@ -108,8 +101,7 @@ public class RecipeStepsFragment extends Fragment {
         if(step.getThumbnailURL() != null){  // setting thumbnail image of videos if is not null
             Uri uri = Uri.parse(step.getThumbnailURL()).buildUpon().build();
             //determine whether uri is image type or not
-            //ContentResolver contentResolver = getActivity().getContentResolver();
-            String type = null; //= contentResolver.getType(uri);
+            String type = null;
             String ext = MimeTypeMap.getFileExtensionFromUrl(step.getThumbnailURL());
             if(ext != null) {
                 type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
@@ -128,17 +120,6 @@ public class RecipeStepsFragment extends Fragment {
 
         //setting description about step in to text view
         textView.setText(step.getDescription());
-        /*if (mTwoPane && hasVideoUrl){//if its tablet layout and video view is visible
-            //removing margin top attribute because on tablet layout we don't need tab layouts..
-            FrameLayout frameLayout = view.findViewById(R.id.video_view_layout);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frameLayout.getLayoutParams());
-            params.gravity = Gravity.NO_GRAVITY;
-            frameLayout.setLayoutParams(params);
-            //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(frameLayout.getLayoutParams());
-            //params. = 0;//.setMargins(0, 0, 0, 0);
-            //frameLayout.setLayoutParams(params);
-            //frameLayout.updateViewLayout(view, params);
-        }*/
     }
 
     public void setCurrentStep(TheSteps step){
@@ -153,17 +134,11 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //ActionBar actionBar = getActivity().getActionBar();
+
         if(!mTwoPane) { //if this is not tablet layout call orientation change
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                //if(actionBar.isShowing()) actionBar.hide();
                 hideSystemUi();
             } else {
-                /*FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(frameLayout.getLayoutParams());
-                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                params.height = 600;
-                frameLayout.setLayoutParams(params);*/
-                //if (!actionBar.isShowing()) actionBar.show();
                 showSystemUI();
             }
         }
@@ -228,14 +203,6 @@ public class RecipeStepsFragment extends Fragment {
             player = null;
         }
     }
-    /*
-    private MediaSource buildMediaSource(Uri uri){
-        DataSource.Factory manifestDataSourceFactory = new DefaultHttpDataSourceFactory("ua");
-        DashChunkSource.Factory dashChunkSourceFactory = new DefaultDashChunkSource.Factory(
-                new DefaultHttpDataSourceFactory("ua", BANDWIDTH_METER));
-        return new DashMediaSource.Factory(dashChunkSourceFactory, manifestDataSourceFactory)
-                .createMediaSource(uri);
-    }*/
 
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {

@@ -16,7 +16,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private TheRecipe recipe;
     private TabLayout tabLayout;
-    private int index;//, lastSelected;
+    private int index;
     private boolean mTwoPane;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +99,6 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             TheSteps step = recipe.getTheSteps().get(position);
             //Log.d(TAG, step.toString());
             bundle.putParcelable("Step", step);
-            //bundle.putParcelable("Recipe", recipe);
-            //bundle.putInt("index", position);
             RecipeStepsFragment stepsFragment = new RecipeStepsFragment();
             stepsFragment.setArguments(bundle);
             // Begin the transaction
@@ -111,9 +109,7 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             fragmentTransaction.addToBackStack(stepsFragment.getClass().getSimpleName());
             // Commit the transaction
             fragmentTransaction.commit();
-            //handleConfigurationChanges(position, new Configuration());
-            //Configuration.ORIENTATION_PORTRAIT == 1 &&
-            //if(stepsFragment.isVisible() && stepsFragment != null) {
+
             index = position;
             populateTabs();
             tabLayout.setVisibility(View.VISIBLE);
@@ -129,13 +125,8 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
     /**
      * Method that initializes tabs and populates view for portrait phone screen*/
     private void populateTabs(){
-        //final ViewPager viewPager = findViewById(R.id.view_pager_tv);
-        //viewPager.setVisibility(View.VISIBLE);
-        //viewPager.setCurrentItem(position);
         final TabLayout tabLayout = findViewById(R.id.portrait_tab_view);
-        //ArrayList<TheSteps> steps = recipe.getTheSteps();
         //Log.d(TAG, " steps size : " + steps.size());
-        //tabLayout.setupWithViewPager(viewPager);
         for(int i = 0; i < recipe.getTheSteps().size(); i++){
             String tabText = "Step " + i;
             //creating tabs with below line code creates empty first slot then populates all
@@ -148,51 +139,22 @@ public class DetailsActivity extends AppCompatActivity implements RecipeMasterFr
             tabLayout.addTab(tab, i);
         }
         tabLayout.getTabAt(index).select();
-        //TabLayout.Tab tab = tabLayout.getTabAt(position);
-        //tab.select();
-        /*PagerAdapter adapter = new PagerAdapter(){
 
-            @Override
-            public int getCount() {
-                return tabLayout.getTabCount();
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return false;
-            }
-        };*/
-        //viewPager.setAdapter(adapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                //viewPager.setCurrentItem(tab.getPosition());
-                //if (lastSelected != tab.getPosition()) {
-                    index = tab.getPosition();//get current position of selected tab
-                    tabLayout.getTabAt(index).select();//select the tab
-                    //Bundle bundle = new Bundle();
-                    //selected tab step
-                    TheSteps step = recipe.getTheSteps().get(index);
-                    //bundle.putParcelable("Step", step);
-                    //creating / replacing new fragment
-                    RecipeStepsFragment stepsFragment = new RecipeStepsFragment();
-                    stepsFragment.setCurrentStep(step);//setting new selected step
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.master_list_fragment, stepsFragment)
-                            //.addToBackStack(null)
-                            //.disallowAddToBackStack()
-                            .commit();
-                    //lastSelected = index;
-                //}
-                //Fragment fragment = getSupportFragmentManager().findFragmentByTag("STEPS_FRAGMENT");
-                // Begin the transaction
-                //getSupportFragmentManager().beginTransaction().remove(fragment).commit();//.detach(fragment).commitNowAllowingStateLoss();
-                //fragment.setArguments(bundle);
-                //getSupportFragmentManager().beginTransaction().add(R.id.master_list_fragment, fragment, "STEPS_FRAGMENT").commit();//.attach(fragment).commitAllowingStateLoss();
-                //fragmentTransaction.replace(R.id.master_list_fragment, fragment, "STEPS_FRAGMENT");
-                //fragmentTransaction.addToBackStack(null);
-                // Commit the transaction
-                //fragmentTransaction.commit();
+                index = tab.getPosition();//get current position of selected tab
+                tabLayout.getTabAt(index).select();//select the tab
+                //selected tab step
+                TheSteps step = recipe.getTheSteps().get(index);
+                //creating / replacing new fragment
+                RecipeStepsFragment stepsFragment = new RecipeStepsFragment();
+                stepsFragment.setCurrentStep(step);//setting new selected step
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.master_list_fragment, stepsFragment)
+                        //.addToBackStack(null)
+                        //.disallowAddToBackStack()
+                        .commit();
             }
 
             @Override

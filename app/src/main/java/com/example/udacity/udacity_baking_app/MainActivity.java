@@ -65,14 +65,8 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "item: " + position);
                 //get the recipe list
                 ArrayList<TheIngredients> ingList = recipeList.get(position).getTheIngredients();
-                //build string ingredient list to show on widget
-                /*StringBuilder builder = new StringBuilder();
-                for (int i=0; i < ingList.size(); i++){
-                    builder.append(ingList.get(i).getIngredient() + " ( " + ingList.get(i).getQuantity() + " "
-                            + ingList.get(i).getMeasure() + ") \n");
-                }
-                String result = builder.toString();*/
                 //start widget update service to update widget
+                //updateWidgetService extends IntentService its responsible to update widget text view.
                 UpdateWidgetService.startUpdateService(view.getContext(), ingList);
                 //start detailed list activity
                 Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
@@ -80,14 +74,9 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
         });
-        /*ListViewFragment listViewFragment = new ListViewFragment();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction()
-                .add(R.id.list_view_fragment, listViewFragment)
-                .commit();*/
         // Get the IdlingResource instance
+        //for testing purposes if you need to test idling resource just remove comments below
         //getIdlingResource();
     }
     /**
@@ -103,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     * Method that retrieves recipe list json from source and saves values in an array list
+     * Method that retrieves recipe list json, from source and saves values in an array list
      *
      * */
     public void getRecipes(){
