@@ -10,4 +10,6 @@ This project is the third task of the Udacity Google Android Developer Nanodegre
 
 * [Retrofit2](http://square.github.io/retrofit/)
 
+* [Picasso](http://square.github.io/picasso/)
+
 #### recipe list image <a href="http://www.freepik.com">Icons made by Freepik</a>
